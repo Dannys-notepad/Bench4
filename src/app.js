@@ -11,7 +11,8 @@ import { users } from './db/schema.js';
 import { eq, sql } from 'drizzle-orm';
 
 // Resource imports
-import authRoutes from './modules/auth/auth.route.js'
+import authRoutes from './modules/auth/auth.route.js';
+import healthRoutes from './modules/health/health.route.js'
 
 const app = express();
 
@@ -20,15 +21,10 @@ app.use(express.urlencoded({ extended:false }));
 app.use(cors());
 app.use(helmet());
 
-app.get('/', async (req, res) => {
-    try {
-        await db.execute(sql`SELECT 1`)
-        res.json({ status: 'okay', db: 'connected' })
-    } catch (error) {
-        res.status(500).json({ status: 'error', message: error.message })
-    }
-})
 
+app.use('/health', healthRoutes)
 //app.use('/api/v1/auth', authRoutes)
+
+
 
 export default app;

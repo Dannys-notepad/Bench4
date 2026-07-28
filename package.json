@@ -9,7 +9,9 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "test": "vitest run",
+    "build": "npm run db:generate && npm run db:push"
   },
   "repository": {
     "type": "git",
@@ -32,5 +34,9 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.10"
   }
 }
