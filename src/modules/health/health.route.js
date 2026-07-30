@@ -5,7 +5,7 @@ import env from '../../config/env.js';
 
 // db imports
 import db from '../../db/client.js';
-import { users } from '../../db/schema.js';
+import { users } from '../../db/schema/schema.js';
 import { sql } from 'drizzle-orm';
 
 const router = express.Router();

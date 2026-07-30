@@ -5,10 +5,13 @@ import cors from 'cors';
 // env imports
 import env from './config/env.js';
 
+// Passport oauth import
+import passport from './config/oauthStrategy.js'
+
 // db imports
-import db from './db/client.js';
-import { users } from './db/schema.js';
-import { eq, sql } from 'drizzle-orm';
+// import db from './db/client.js';
+// import { users } from './db/schema.js';
+// import { eq, sql } from 'drizzle-orm';
 
 // Resource imports
 import authRoutes from './modules/auth/auth.route.js';
@@ -21,9 +24,11 @@ app.use(express.urlencoded({ extended:false }));
 app.use(cors());
 app.use(helmet());
 
+// passport initialization
+app.use(passport.initialize())
 
 app.use('/health', healthRoutes)
-//app.use('/api/v1/auth', authRoutes)
+app.use('/api/auth', authRoutes)
 
 
 
