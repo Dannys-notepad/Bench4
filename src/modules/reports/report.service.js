@@ -10,13 +10,14 @@ export const createNewReport = async (data) => {
     // Even though Zod handles this at the route level, it's good practice 
     // to ensure the service receives what it expects independently, in case 
     // it's called from somewhere else (like a script or internal queue).
-    if (!data || !data.file || !data.title || !data.template || !data.userId) throw new AppError('Required report data missing', 400)
+    if (!data || !data.files || data.files.length === 0 || !data.title || !data.template || !data.userId) throw new AppError('Required report data missing', 400)
 
     try {
-        const { title, template, status, version, userId, file } = data
+        const { title, template, status, version, userId, files } = data
         
         // Cloudinary puts the file's uploaded URL in `file.path`
-        const rawPhotoUrl = file.path 
+        const rawPhotoUrls = files.map(f => f.path);
+        const publicIds = files.map(file => file.publicId)
 
         // 2. Database Insertion
         // We interact with the repository layer instead of writing raw SQL or ORM code here. 
@@ -27,7 +28,8 @@ export const createNewReport = async (data) => {
             template,
             status: status || 'draft',
             version: version || 1,
-            rawPhotoUrl
+            rawPhotoUrls,
+            publicIds
         })
 
         if (!report) throw AppError('Report could not be created', 500)
@@ -57,7 +59,7 @@ export const getReportById = async (id, userId) => {
     } catch (error) {
         if(error instanceof AppError) throw error
         console.error('Error fetching report:', error)
-        return fail('Server error', null, 500);
+        throw new AppError('Server error', 500);
     }
 }
 

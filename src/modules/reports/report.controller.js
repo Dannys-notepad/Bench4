@@ -18,14 +18,12 @@ const sendJson = (res, body, status) => {
  */
 export const handleCreateNewReport = asyncHandler(async (req, res) => {
     const body = req.body
-    const file = req.file
-        
     const userId = req.user?.id
     if (!userId) throw new AppError('User authentication required', 401)
 
     const reportPayload = {
         ...body,
-        file,
+        files: req.files || [],
         userId
     }
 

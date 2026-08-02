@@ -6,9 +6,9 @@ import { transcribeImage } from '../lib/gemini.js'
  * This runs natively in the Node.js event loop without requiring an external queue like Redis.
  * 
  * @param {string} reportId - The database ID of the report
- * @param {string} rawPhotoUrl - The URL of the uploaded image
+ * @param {string[]} rawPhotoUrls - Array of URLs of the uploaded image
  */
-export const processTranscriptionJob = async (reportId, rawPhotoUrl) => {
+export const processTranscriptionJob = async (reportId, rawPhotoUrls) => {
     console.log(`[Background Job] Started transcription for report ${reportId}`)
 
     try {

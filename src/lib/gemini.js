@@ -22,17 +22,16 @@ async function urlToGenerativePart(url) {
 
 /**
  * Transcribes handwritten lab notes from an image URL using Gemini 2.5 Flash
- * @param {string} photoUrl - The URL of the uploaded image
+ * @param {string[]} photoUrls - Array of URLs of the uploaded image
  * @returns {Promise<string>} - The raw text transcript
  */
-export const transcribeImage = async (photoUrl) => {
-    // We use gemini-2.5-flash as specified in the AGENT.md architecture
+export const transcribeImage = async (photoUrls) => {
     const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' })
     
-    const imagePart = await urlToGenerativePart(photoUrl)
+    const imageParts = await Promise.all(photoUrls.map(url => urlToGenerativePart(url)));
     const prompt = "You are a professional lab assistant. Please read the handwritten notes in this image and provide a highly accurate raw text transcript. If a word or digit is ambiguous or smudged, flag it clearly (e.g., [UNSURE: text]). Do not make up any missing information."
 
-    const result = await model.generateContent([prompt, imagePart])
+    const result = await model.generateContent([prompt, ...imageParts])
     const response = await result.response
     const text = response.text()
     

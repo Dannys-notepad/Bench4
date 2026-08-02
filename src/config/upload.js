@@ -22,6 +22,10 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
+// await Promise.all(
+//     reportError.rawPhotoPublicIds.map(id => cloudinary.uploader.destroy(id))
+// )
+
 export const upload = multer({
     storage,
     fileFilter,

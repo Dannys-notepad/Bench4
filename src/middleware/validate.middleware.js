@@ -17,26 +17,28 @@ export const validateBody = (schema) => {
     }
 }
 
-export const validateFile = (schema, { required = true } = {}) => {
+export const validateFiles = (schema, { required = true } = {}) => {
     return (req, res, next) => {
-        if (!req.file) {
+        const files = req.files || []
+        if (files.length === 0) {
             if (required) throw new AppError('No uploaded file provided', 400)
-            return next()
         }
 
-        const result = schema.safeParse(req.file)
+        for (const file of files) {
+            const result = schema.safeParse(file)
 
-        if (!result.success) {
-            if (req.file.path && fs.existsSync(req.file.path)) {
-                fs.unlink(req.file.path, (err) => {
-                    if (err) console.error('Failed to delete rejected upload', err)
+            if (!result.success) {
+                if (file.path && fs.existsSync(file.path)) {
+                    fs.unlink(file.path, (err) => {
+                        if (err) console.error('Failed to delete rejected upload', err)
+                    })
+                }
+
+                throw new AppError('Invalid file', 400, {
+                    error: 'Invalid file',
+                    details: result.error.flatten().fieldErrors
                 })
             }
-
-            throw new AppError('Invalid file', 400, {
-                error: 'Invalid file',
-                details: result.error.flatten().fieldErrors
-            })
         }
 
         next()
