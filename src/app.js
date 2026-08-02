@@ -1,35 +1,48 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+// import path from 'path';
+// import { fileURLToPath } from 'url';
 
 // env imports
 import env from './config/env.js';
 
 // Passport oauth import
-import passport from './config/oauthStrategy.js'
+import passport from './config/oauthStrategy.js';
 
-// db imports
-// import db from './db/client.js';
-// import { users } from './db/schema.js';
-// import { eq, sql } from 'drizzle-orm';
+// Custom middlware imports
+import notFound from './middleware/404.middlware.js';
+import errHandler from './middleware/error.middleware.js';
 
 // Resource imports
 import authRoutes from './modules/auth/auth.route.js';
-import healthRoutes from './modules/health/health.route.js'
+import healthRoutes from './modules/health/health.route.js';
+import reportRoutes from './modules/reports/report.route.js';
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended:false }));
-app.use(cors());
-app.use(helmet());
+// Middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(helmet({
+    contentSecurityPolicy: false // Disabled temporarily to allow inline scripts in the HTML for testing
+}))
+app.use(cors())
+
+// Custom middlewares
+app.use(notFound)
+app.use(errHandler)
+
+// Serve static frontend files from the public directory
+// const __filename = fileURLToPath(import.meta.url)
+// const __dirname = path.dirname(__filename)
+// app.use(express.static(path.join(__dirname, '../public')));
 
 // passport initialization
 app.use(passport.initialize())
 
 app.use('/health', healthRoutes)
 app.use('/api/auth', authRoutes)
-
-
+app.use('/api/reports', reportRoutes)
 
 export default app;

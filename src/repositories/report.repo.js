@@ -18,7 +18,7 @@ const reportRepository = {
     },
 
     async create(data) {
-        const report = await db.insert(reports).values({
+        const [report] = await db.insert(reports).values({
             userId: data.userId,
             title: data.title,
             template: data.template,

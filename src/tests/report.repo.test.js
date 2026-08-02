@@ -53,7 +53,7 @@ describe('reportRepository', () => {
     
     it('Finds all user reports by the users id', async () => {
         const data = buildData()
-        const [report] = await reportRepository.create(data)
+        const report = await reportRepository.create(data)
 
         await reportRepository.create({
             userId: data.userId,
