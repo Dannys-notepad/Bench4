@@ -11,8 +11,8 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
-    "test": "vitest run",
-    "build": "npm run db:generate && npm run db:push"
+    "test": "vitest run --fileParallelism false",
+    "build": "npm run db:generate && npm run db:migrate"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,9 @@
   },
   "homepage": "https://github.com/Dannys-notepad/Bench4#readme",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@sparticuz/chromium": "^149.0.0",
+    "cloudinary": "^1.41.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
@@ -34,9 +37,12 @@
     "express": "^5.2.1",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
+    "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
     "pg": "^8.22.0",
+    "puppeteer-core": "^25.4.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
