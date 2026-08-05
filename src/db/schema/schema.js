@@ -25,3 +25,12 @@ export const reports = pgTable('reports', {
     created_at: timestamp('created_at').defaultNow().notNull(),
     updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const tokens = paTable('black_listed_token', {
+    id: serial('id').primaryKey(),
+    userId: interger('user_id').notNull().reference(() => users.id, { onDelete: 'cascade' }),
+    token: text('token').notNull(),
+    status: varchar('status', { length: 50 }).notNull().default('active'),
+    created_at: timestamp('created_at').defaultNow().notNull(),
+    updated_at: timestamp('updated_at').defaultNow().notNull(),
+})

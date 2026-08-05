@@ -24,4 +24,4 @@ export const confirmTranscriptSchema = z.object({
 export const finalizeReportSchema = z.object({
     // We expect a structured object from the frontend (the finalized JSON)
     structuredData: z.record(z.any())
-}).looseObject()//.passthrough()
+}).loose()//.passthrough()

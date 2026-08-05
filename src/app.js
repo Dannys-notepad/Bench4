@@ -25,12 +25,12 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(helmet({
-    contentSecurityPolicy: false // Disabled temporarily to allow inline scripts in the HTML for testing
+    //contentSecurityPolicy: false // Disabled temporarily to allow inline scripts in the HTML for testing
 }))
 app.use(cors())
 
 // Custom middlewares
-app.use(notFound)
+//app.use(notFound)
 app.use(errHandler)
 
 // Serve static frontend files from the public directory
