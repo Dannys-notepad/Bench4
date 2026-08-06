@@ -3,7 +3,7 @@ function errorHanndler(err, req, res, next) {
     const message = err.isOperational ? err.message : 'Something went wrong'
 
     if (!err.isOperational) {
-        console.error('UNEXPECTED ERROR 🔥', err)
+        console.error('UNEXPECTED ERROR', err)
     }
 
     console.error(`[${req.method} ${req.originalUrl}]`, err.stack || err.message)

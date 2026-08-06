@@ -6,12 +6,12 @@ import { processTranscriptionJob } from '../../workers/transcriptionWorker.js'
  * simulating a queue so the main request thread isn't blocked.
  * 
  * @param {string} reportId - The database ID of the report
- * @param {string} rawPhotoUrl - The URL of the uploaded image
+ * @param {string[]} rawPhotoUrls - An array of the URLs of the uploaded images
  */
-export const enqueueTranscriptionJob = (reportId, rawPhotoUrl) => {
+export const enqueueTranscriptionJob = (reportId, rawPhotoUrls) => {
     // We call the async function without awaiting it.
     // This fires off the promise in the background.
-    processTranscriptionJob(reportId, rawPhotoUrl).catch(err => {
+    processTranscriptionJob(reportId, rawPhotoUrls).catch(err => {
         console.error(`Unhandled error in background job for report ${reportId}:`, err)
     })
     

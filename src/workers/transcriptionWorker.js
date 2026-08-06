@@ -16,14 +16,14 @@ export const processTranscriptionJob = async (reportId, rawPhotoUrls) => {
         await reportRepository.update(reportId, { status: 'structuring' })
 
         // 2. Call Gemini Vision to transcribe the image
-        const rawTranscript = await transcribeImage(rawPhotoUrl)
+        const rawTranscript = await transcribeImage(rawPhotoUrls)
         console.log(`[Background Job] Successfully got transcript for report ${reportId}`)
         console.log(rawTranscript)
 
         // 3. Save the transcript to the database
         await reportRepository.update(reportId, { 
             transcript: rawTranscript,
-            status: 'structuring' 
+            status: 'needs_review' 
         })
         
         console.log(`[Background Job] Finished transcription for report ${reportId}`)

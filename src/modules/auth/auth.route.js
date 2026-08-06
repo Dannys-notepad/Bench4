@@ -3,7 +3,7 @@ import passport from '../../config/oauthStrategy.js'
 import jwt from 'jsonwebtoken'
 import env from '../../config/env.js';
 import asyncHandler from '../../lib/asyncHandler.js';
-import tokenRepository from '../../repositories/tokens.repo.js'
+import tokenRepository from '../../repositories/token.repo.js'
 
 const router = Router();
 
@@ -21,14 +21,14 @@ router.get('/google/callback',
             { expiresIn: '7d' }
         )
 
-        const userTokens = await tokenRepository.find(req.user.id)
+        const userTokens = await tokenRepository.findAllUserTokens(req.user.id)
         if (userTokens && userTokens.length > 0) {
             const activeToken = userTokens.filter(t => t.status === 'active')
             const blackListToken = await tokenRepository.blackListToken(activeToken[0].id, { status: 'blacklisted' })
             if (!blackListToken) throw new AppError('Could not blacklist token', 400)
         }
 
-        const saveToken = await tokenRepository.create({
+        const saveToken = await tokenRepository.add({
             userId: req.user.id,
             token
         })

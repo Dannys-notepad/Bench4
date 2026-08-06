@@ -44,6 +44,7 @@ export const handleConfirmTranscript = asyncHandler(async (req, res) => {
 })
 
 export const handleFinalizeReport = asyncHandler(async (req, res) => {
+    const { structuredData } = req.body
     const result = await finalizeReport(req.params.id, structuredData, req.user?.id)
     return sendJson(res, { message: result.message, data: result.data }, result.status)
 })

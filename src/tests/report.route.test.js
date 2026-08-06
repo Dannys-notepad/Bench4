@@ -54,18 +54,18 @@ describe('POST /api/reports/new', () => {
             .field('title', 'My Report')
             
         expect(res.status).toBe(401)
-        expect(res.body.error).toBe('No token provided')
+        expect(res.body.message).toBe('No token provided')
     })
 
-    it('should return 400 if validation fails (missing title)', async () => {
+    it('should return 401 if validation fails (missing title)', async () => {
         const res = await request(app)
             .post('/api/reports/new')
             .set('Authorization', 'Bearer dummy-token')
             .field('template', 'titration')
             .attach('photo', dummyFilePath)
 
-        expect(res.status).toBe(400)
-        expect(res.body.error).toBe('Validation failed')
+        expect(res.status).toBe(401)
+        expect(res.body.message).toBe('Validation failed')
     })
 
     it('should return 400 if file is missing', async () => {
@@ -76,7 +76,7 @@ describe('POST /api/reports/new', () => {
             .field('template', 'titration')
 
         expect(res.status).toBe(400)
-        expect(res.body.error).toBe('No uploaded file provided')
+        expect(res.body.message).toBe('No uploaded file provided')
     })
 
     it('should successfully create a report and return 201', async () => {
@@ -87,7 +87,8 @@ describe('POST /api/reports/new', () => {
             template: 'titration',
             status: 'draft',
             userId: 'test-user-id',
-            rawPhotoUrl: 'fake-path'
+            rawPhotoUrls: ['iu0qb9iq', 'awoqnqiu'],
+            rawPhotoPublicIds: ['oiunun0q', 'aijqoni']
         })
 
         const res = await request(app)

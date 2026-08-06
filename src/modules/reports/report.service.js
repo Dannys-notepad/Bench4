@@ -35,8 +35,7 @@ export const createNewReport = async (data) => {
         if (!report) throw AppError('Report could not be created', 500)
 
         // 3. Enqueue the async Transcription job for Gemini
-        // We import it dynamically or statically at the top of the file
-        enqueueTranscriptionJob(report.id, report.rawPhotoUrl)
+        enqueueTranscriptionJob(report.id, report.rawPhotoUrls)
 
         // 4. Return Standardized Response
         return ok('Report created successfully', report, 201)

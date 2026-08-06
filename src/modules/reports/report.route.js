@@ -13,8 +13,6 @@ import { createReportSchema, photoFileSchema, confirmTranscriptSchema, finalizeR
 const router = Router()
 
 router.post('/new', requireAuth, upload.array('photos', 10), validateBody(createReportSchema), validateFiles(photoFileSchema), handleCreateNewReport)
-
-// New endpoints for the frontend workflow
 router.get('/:id', requireAuth, handleGetReport)
 router.patch('/:id/confirm-transcript', requireAuth, validateBody(confirmTranscriptSchema), handleConfirmTranscript)
 router.post('/:id/finalize', requireAuth, validateBody(finalizeReportSchema), handleFinalizeReport)
