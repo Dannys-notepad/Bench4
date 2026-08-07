@@ -1,6 +1,7 @@
 import dotenv from 'dotenv/config';
 
-const requiredEnvVars = ['PORT',
+const requiredEnvVars = [
+    'PORT',
     'SECRET_KEY',
     'DATABASE_URL',
     'GOOGLE_CLIENT_ID',
@@ -9,7 +10,12 @@ const requiredEnvVars = ['PORT',
     'CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
     'CLOUDINARY_API_SECRET',
-    'GEMINI_API_KEY'
+    'GEMINI_API_KEY',
+    /*'GEMINI_API_KEY_1',
+    'GEMINI_API_KEY_2',
+    'GEMINI_API_KEY_3',
+    'GEMINI_API_KEY_4',
+    'GEMINI_API_KEY_5'*/
 ]
 
 for(const key of requiredEnvVars) {

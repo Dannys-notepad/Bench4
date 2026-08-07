@@ -1,6 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import env from '../config/env.js'
 
+let model, transcriptorApiKey, structurerApiKey, guidedChatApiKey
+
+model = 'gemini-3.5-flash-lite'
+
 // Initialize the Gemini client
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 
@@ -25,8 +29,8 @@ async function urlToGenerativePart(url) {
  * @param {string[]} photoUrls - Array of URLs of the uploaded image
  * @returns {Promise<string>} - The raw text transcript
  */
-export const transcribeImage = async (photoUrls) => {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' })
+export const transcribeImage = async (photoUrls, editInstructions) => {
+    const model = genAI.getGenerativeModel({ model })
     
     const imageParts = await Promise.all(photoUrls.map(url => urlToGenerativePart(url)));
     const prompt = `
@@ -41,6 +45,10 @@ TRANSCRIPTION RULES:
 6. If multiple images are provided, transcribe them in the order given and mark the start of each with a page label, e.g. [PAGE 1].
 7. Do not add any information not present in the notes, and do not summarize — this must be a full verbatim transcript, not a paraphrase.
 8. Return only the transcript. No commentary, no explanation of your process.
+9. If the user explicitly ask for improvement to any part you can, but you can't generate any part, you can only improve, modify, or add to an existing part, the user edit instruction is below, if NULL or UNDEFINED, it means the user did not specify anything and just continue with the transcription
+
+USER EDIT INSTRUCTION
+${editInstructions}
 `
 
     const result = await model.generateContent([prompt, ...imageParts])
@@ -58,7 +66,7 @@ TRANSCRIPTION RULES:
  */
 export const structureTranscript = async (transcript, template) => {
     // We use gemini-1.5-flash for the fast structured mapping
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' })
+    const model = genAI.getGenerativeModel({ model })
     
     const prompt = `
 You are a professional data structuring assistant for a chemistry lab.

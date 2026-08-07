@@ -7,9 +7,16 @@ const userRepository = {
         return db.select().from(users)
     },
 
+    async findById(id) {
+        const [user] = await db.select()
+        .from(users).where(eq(users.id, id))
+        return user ?? null
+    },
+
     async findByGoogleId(googleId) {
         const [user] = await db.select()
         .from(users).where(eq(users.googleId, googleId))
+        
         return user ?? null
     },
 

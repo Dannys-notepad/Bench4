@@ -4,7 +4,7 @@ import { sql } from 'drizzle-orm'
 const userPlanEnum = pgEnum('user_plan', ['free', 'pro'])
 const billingIntervalEnum = pgEnum('user_billing_interval', ['weekly', 'monthly', 'yearly'])
 const reportTypeEnum = pgEnum('report_type', ['guided', 'digitized'])
-const reportStatusEnum = pgEnum('report_status', ['draft', 'needs_review', 'structuring', 'completed'])
+const reportStatusEnum = pgEnum('report_status', ['draft', 'needs_review', 'structuring', 'completed', 'failed'])
 const tokenStatusEnum = pgEnum('token_status', ['active', 'blacklisted'])
 
 export const users = pgTable('users', {
@@ -37,7 +37,7 @@ export const reports = pgTable('reports', {
 
     title: varchar('title', { length: 255 }).notNull(),
     template: varchar('template', { length: 100 }).notNull(),
-    status: reportSourceEnum('status').notNull().default('draft'),
+    status: reportStatusEnum('status').notNull().default('draft'),
 
     editInstructions: text('edit_instructions'),
     rawPhotoUrls: text('raw_photo_urls').array(),

@@ -8,7 +8,7 @@ import { transcribeImage } from '../lib/gemini.js'
  * @param {string} reportId - The database ID of the report
  * @param {string[]} rawPhotoUrls - Array of URLs of the uploaded image
  */
-export const processTranscriptionJob = async (reportId, rawPhotoUrls) => {
+export const processTranscriptionJob = async (reportId, rawPhotoUrls, editInstructions) => {
     console.log(`[Background Job] Started transcription for report ${reportId}`)
 
     try {
@@ -16,7 +16,7 @@ export const processTranscriptionJob = async (reportId, rawPhotoUrls) => {
         await reportRepository.update(reportId, { status: 'structuring' })
 
         // 2. Call Gemini Vision to transcribe the image
-        const rawTranscript = await transcribeImage(rawPhotoUrls)
+        const rawTranscript = await transcribeImage(rawPhotoUrls, editInstructions)
         console.log(`[Background Job] Successfully got transcript for report ${reportId}`)
         console.log(rawTranscript)
 

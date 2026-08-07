@@ -2,7 +2,7 @@ import reportRepository from '../../repositories/report.repo.js'
 import { ok, fail } from '../../lib/https.js'
 import AppError from '../../lib/AppError.js'
 import { enqueueTranscriptionJob } from '../../lib/queue/transcriptionQueue.js'
-import { processStructuringJob } from '../../workers/structuringWorker.js'
+//import { processStructuringJob } from '../../workers/structuringWorker.js'
 import { generatePDF } from '../../lib/pdf.js'
 
 export const createNewReport = async (data) => {
@@ -10,7 +10,7 @@ export const createNewReport = async (data) => {
     let rawPhotoUrls, rawPhotoPublicIds
     
     if (!data || !data.title || !data.template || !data.userId) return fail('Missing required payload data')
-    if ( data.type === 'digitized' && (!data.files || data.files.length === 0)) return fail('No uploaded files')
+    if ( data.reportType === 'digitized' && (!data.files || data.files.length === 0)) return fail('No uploaded files')
         
     try {
         const { title, template, status, reportType, editInstruction, version, userId, files } = data
@@ -40,10 +40,12 @@ export const createNewReport = async (data) => {
 
         if (!report) return fail('Report could not be created', {}, 400)
 
-        // 3. Enqueue the async Transcription job for Gemini
-        enqueueTranscriptionJob(report.id, report.rawPhotoUrls)
+        if  (reportType === 'digitized') {
+            // 3. Enqueue the async Transcription job for Gemini
+            enqueueTranscriptionJob(report.id, report.rawPhotoUrls, report.editInstructions)
+        }
+        
 
-        // 4. Return Standardized Response
         return ok('Report created successfully', report, 201)
     } catch (error) {
         console.error('Error creating report:')
@@ -53,10 +55,9 @@ export const createNewReport = async (data) => {
 
 export const getReportById = async (id, userId) => {
     try {
-        const report = await reportRepository.find(Number(id));
+        const report = await reportRepository.find(id);
         if (!report) return fail('Report not found', {}, 404)
         
-        // Security check
         if (report.userId !== userId) return fail('Unauthorized', {}, 401)
         
         return ok('Report fetched successfully', report, 200);
@@ -89,15 +90,15 @@ export const confirmTranscript = async (id, transcript, userId) => {
 
 export const finalizeReport = async (id, structuredData, userId) => {
     try {
-        const report = await reportRepository.find(Number(id));
+        const report = await reportRepository.find(id);
         if (!report) return error('Report not found', {}, 404);
         if (report.userId !== userId) return error('Unauthorized', {}, 401);
 
         // 1. Mark as finalized and store the human-approved structured data
         const approvedAt = new Date();
-        const finalReport = await reportRepository.update(Number(id), { 
+        const finalReport = await reportRepository.update(id, { 
             structuredData, 
-            status: 'finalized', 
+            status: 'completed', 
             approvedAt
         });
 
