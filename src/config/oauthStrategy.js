@@ -9,9 +9,12 @@ passport.use(new GoogleStrategy(
         clientSecret: env.GOOGLE_CLIENT_SECRET,
         callbackURL: env.GOOGLE_CALLBACK_URL
     },
-    async (assessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
         try {
-            const user = await userRepository.findOrCreateFromGoogle(profile);
+            
+            let user = await userRepository.findByGoogleId(profile.id)
+            if (!user) user = await userRepository.createFromGoogle(profile);
+            
             done(null, user)
         } catch(error) {
             done(error, null)

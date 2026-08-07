@@ -1,16 +1,13 @@
 import fs from 'fs'
 import AppError from '../lib/AppError.js'
+import { error } from '../lib/response.js'
 
 export const validateBody = (schema) => {
     return (req, res, next) => {
         const result = schema.safeParse(req.body);
 
         if (!result.success) {
-            /*throw new AppError('Validation failed', 400, {
-                error: 'Validation failed',
-                details: result.error.flatten().fieldErrors
-            })*/
-            return res.status(400).json({ message: 'Validation failed' })
+            return error(res, 'Validation failed', result.error.flatten().fieldErrors)
         }
 
         req.body = result.data
@@ -22,7 +19,7 @@ export const validateFiles = (schema, { required = true } = {}) => {
     return (req, res, next) => {
         const files = req.files || []
         if (files.length === 0) {
-            if (required) return res.status(400).json({ message: 'No uploaded file provided' })/*throw new AppError('No uploaded file provided', 400)*/
+            if (required) return error(res, 'No uploaded file provided')
         }
 
         for (const file of files) {
@@ -35,10 +32,7 @@ export const validateFiles = (schema, { required = true } = {}) => {
                     })
                 }
 
-                return res.status(400).json({ message: 'Invalid file' })/*throw new AppError('Invalid file', 400, {
-                    error: 'Invalid file',
-                    details: result.error.flatten().fieldErrors
-                })*/
+                return error(res, 'Invalid file', result.error.flatten().fieldErrors)
             }
         }
 

@@ -1,4 +1,3 @@
-// RESPONSE HELPER
 // Builds a standard JSON response payload and sends it with the provided status.
 const sendResponse = (res, { success, message, status, data = null, errors = null }) => {
   const payload = { success, message };

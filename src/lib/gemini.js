@@ -68,7 +68,6 @@ OUTPUT FORMAT (return exactly this shape, valid JSON, no trailing commas):
 {
   "title": "string",
   "aim": "string"
-  "objective": "string",
   "introduction": "string",
   "materials": {
     "apparatus": ["string"],
@@ -89,7 +88,7 @@ OUTPUT FORMAT (return exactly this shape, valid JSON, no trailing commas):
 }
 
 FIELD RULES:
-1. title / aim / objective — state as written in the notes (aim and objective might not be in the note so create them from the experiment context).
+1. title / aim / objective — state as written in the notes.
 2. introduction — combine preamble and theory into ONE brief, plain-language paragraph. Keep it short; do not pad it.
 3. materials — split into apparatus and reagents exactly as listed.
 4. procedures — write as a single paragraph (not numbered steps), in passive/third-person voice (e.g. "The solution was heated to 60°C," not "I heated the solution").
@@ -99,7 +98,7 @@ FIELD RULES:
    - Use "tables" only for tables that don't fit a clean raw_data structure (e.g. narrative tables) — represent each as a formatted string.
 6. observations — extract only what's written. Do not invent plausible observations if none are present (see rule 9).
 7. questions — extract each question with its answer from the notes.
-8. precautions — extract as listed (create from experiment context if not explicitly provided).
+8. precautions — extract as listed.
 9. discussion / conclusion — summarize/extract only what the notes support. Do not invent a conclusion the notes don't contain (see rule 9).
 
 DATA INTEGRITY RULES:
@@ -111,10 +110,11 @@ DATA INTEGRITY RULES:
 OUTPUT RULES:
 13. Return ONLY raw JSON — no markdown code fences, no commentary before or after.
 14. Before returning, mentally verify the JSON is syntactically valid (matched braces/brackets, no trailing commas, all keys quoted).
+15. The order of each element in JSON object should be as in the example no one should come before the other.
 
 RAW TRANSCRIPT:
 ${transcript}
-    `
+`
 
     const result = await model.generateContent(prompt)
     const response = await result.response

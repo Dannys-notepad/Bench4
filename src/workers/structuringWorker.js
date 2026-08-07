@@ -27,10 +27,10 @@ export const processStructuringJob = async (reportId, transcript, template) => {
 
         console.log(`[Background Job] Successfully structured data for report ${reportId}`)
 
-        // 2. Save the structured data and update status to 'structured'
+        // 2. Save the structured data and update status to 'completed'
         await reportRepository.update(reportId, { 
             structuredData,
-            status: 'structured' 
+            status: 'completed'
         })
         
         console.log(`[Background Job] Finished structuring for report ${reportId}`)

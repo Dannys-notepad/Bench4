@@ -8,21 +8,27 @@ const userRepository = {
     },
 
     async findByGoogleId(googleId) {
-        const [user] = await db.select().from(users).where(eq(users.googleId, googleId))
+        const [user] = await db.select()
+        .from(users).where(eq(users.googleId, googleId))
         return user ?? null
     },
 
-    async findOrCreateFromGoogle(profile) {
-        const existing = await this.findByGoogleId(profile.id)
-        if (existing) return existing;
-
+    async createFromGoogle(profile) {
         const [user] = await db.insert(users).values({
-            username: profile.displayName,
+            googleId: profile.id,
             email: profile.emails[0].value,
-            googleId: profile.id
+            username: profile.displayName,
+            avatarUrl: profile.photos?.[0]?.value ?? null
         }).returning();
 
-        return user
+        return user ?? null
+    },
+
+    async update(userId, updates) {
+        const [user] = db.update(users)
+        .set(updates).where(eq(users.id, userId)).returning()
+
+        return user ?? null
     }
 }
 

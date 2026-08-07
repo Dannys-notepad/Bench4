@@ -12,7 +12,7 @@ import { createReportSchema, photoFileSchema, confirmTranscriptSchema, finalizeR
 
 const router = Router()
 
-router.post('/new', requireAuth, upload.array('photos', 10), validateBody(createReportSchema), validateFiles(photoFileSchema), handleCreateNewReport)
+router.post('/new/digitized', requireAuth, upload.array('photos', 10), validateBody(createReportSchema), validateFiles(photoFileSchema), handleCreateNewReport)
 router.get('/:id', requireAuth, handleGetReport)
 router.patch('/:id/confirm-transcript', requireAuth, validateBody(confirmTranscriptSchema), handleConfirmTranscript)
 router.post('/:id/finalize', requireAuth, validateBody(finalizeReportSchema), handleFinalizeReport)

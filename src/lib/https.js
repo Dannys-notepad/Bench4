@@ -4,7 +4,7 @@ export const ok = (message, data, status = 200) => ({
     status
 })
 
-export const fail = (message, data = null, status = 400) => ({
+export const fail = (message, data = {}, status = 400) => ({
     message,
     data,
     status

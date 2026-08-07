@@ -36,12 +36,12 @@ vi.mock('../config/upload.js', async () => {
 describe('POST /api/reports/new', () => {
     // Create a dummy file to use for uploads
     const dummyFilePath = path.join(__dirname, 'dummy.jpg')
-    
+
     beforeEach(() => {
         vi.clearAllMocks()
         // Reset JWT verify to always succeed with a dummy user
         jwt.verify.mockReturnValue({ id: 'test-user-id' })
-        
+
         // Ensure dummy file exists for the test
         if (!fs.existsSync(dummyFilePath)) {
             fs.writeFileSync(dummyFilePath, 'dummy image content')
@@ -52,9 +52,9 @@ describe('POST /api/reports/new', () => {
         const res = await request(app)
             .post('/api/reports/new')
             .field('title', 'My Report')
-            
+
         expect(res.status).toBe(401)
-        expect(res.body.message).toBe('No token provided')
+        expect(res.body.error).toBe('No token provided')
     })
 
     it('should return 401 if validation fails (missing title)', async () => {
@@ -65,7 +65,7 @@ describe('POST /api/reports/new', () => {
             .attach('photo', dummyFilePath)
 
         expect(res.status).toBe(401)
-        expect(res.body.message).toBe('Validation failed')
+        expect(res.body.error).toBe('Validation failed')
     })
 
     it('should return 400 if file is missing', async () => {
@@ -76,7 +76,7 @@ describe('POST /api/reports/new', () => {
             .field('template', 'titration')
 
         expect(res.status).toBe(400)
-        expect(res.body.message).toBe('No uploaded file provided')
+        expect(res.body.error).toBe('No uploaded file provided')
     })
 
     it('should successfully create a report and return 201', async () => {
@@ -101,7 +101,7 @@ describe('POST /api/reports/new', () => {
         expect(res.status).toBe(201)
         expect(res.body.message).toBe('Report created successfully')
         expect(res.body.data.id).toBe('report-123')
-        
+
         // Verify that the repository was called with the correct payload
         expect(reportRepository.create).toHaveBeenCalledOnce()
     })

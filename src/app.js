@@ -13,6 +13,7 @@ import passport from './config/oauthStrategy.js';
 // Custom middlware imports
 import notFound from './middleware/404.middlware.js';
 import errHandler from './middleware/error.middleware.js';
+import reqLogger from './middleware/reqLogger.middleware.js';
 
 // Resource imports
 import authRoutes from './modules/auth/auth.route.js';
@@ -32,6 +33,7 @@ app.use(cors())
 // Custom middlewares
 //app.use(notFound)
 app.use(errHandler)
+app.use(reqLogger)
 
 // Serve static frontend files from the public directory
 // const __filename = fileURLToPath(import.meta.url)
