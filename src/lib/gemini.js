@@ -1,11 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import env from '../config/env.js'
+import env from '#config/env.js'
 
-let model, transcriptorApiKey, structurerApiKey, guidedChatApiKey
+const MODEL = 'gemini-3.5-flash'
 
-model = 'gemini-3.5-flash-lite'
-
-// Initialize the Gemini client
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 
 /**
@@ -25,12 +22,13 @@ async function urlToGenerativePart(url) {
 }
 
 /**
- * Transcribes handwritten lab notes from an image URLs using Gemini 2.5 Flash
- * @param {string[]} photoUrls - Array of URLs of the uploaded image
+ * Transcribes handwritten lab notes from image URLs using Gemini vision.
+ * @param {string[]} photoUrls - Array of URLs of the uploaded images
+ * @param {string|null} editInstructions - Optional user edit instructions
  * @returns {Promise<string>} - The raw text transcript
  */
 export const transcribeImage = async (photoUrls, editInstructions) => {
-    const model = genAI.getGenerativeModel({ model })
+    const model = genAI.getGenerativeModel({ model: MODEL })
     
     const imageParts = await Promise.all(photoUrls.map(url => urlToGenerativePart(url)));
     const prompt = `
@@ -48,14 +46,12 @@ TRANSCRIPTION RULES:
 9. If the user explicitly ask for improvement to any part you can, but you can't generate any part, you can only improve, modify, or add to an existing part, the user edit instruction is below, if NULL or UNDEFINED, it means the user did not specify anything and just continue with the transcription
 
 USER EDIT INSTRUCTION
-${editInstructions}
+${editInstructions ?? 'None'}
 `
 
     const result = await model.generateContent([prompt, ...imageParts])
     const response = await result.response
-    const text = response.text()
-    
-    return text
+    return response.text()
 }
 
 /**
@@ -65,8 +61,7 @@ ${editInstructions}
  * @returns {Promise<string>} - The JSON string
  */
 export const structureTranscript = async (transcript, template) => {
-    // We use gemini-1.5-flash for the fast structured mapping
-    const model = genAI.getGenerativeModel({ model })
+    const model = genAI.getGenerativeModel({ model: MODEL })
     
     const prompt = `
 You are a professional data structuring assistant for a chemistry lab.

@@ -5,20 +5,20 @@ import cors from 'cors';
 // import { fileURLToPath } from 'url';
 
 // env imports
-import env from './config/env.js';
+import env from '#config/env.js';
 
 // Passport oauth import
-import passport from './config/oauthStrategy.js';
+import passport from '#config/oauthStrategy.js';
 
 // Custom middlware imports
-import notFound from './middleware/404.middlware.js';
-import errHandler from './middleware/error.middleware.js';
-import reqLogger from './middleware/reqLogger.middleware.js';
+import notFound from '#middleware/404.middlware.js';
+import errHandler from '#middleware/error.middleware.js';
+import reqLogger from '#middleware/reqLogger.middleware.js';
 
 // Resource imports
-import authRoutes from './modules/auth/auth.route.js';
-import healthRoutes from './modules/health/health.route.js';
-import reportRoutes from './modules/reports/report.route.js';
+import authRoutes from '#modules/auth/auth.route.js';
+import healthRoutes from '#modules/health/health.route.js';
+import reportRoutes from '#modules/reports/report.route.js';
 
 const app = express();
 
@@ -30,9 +30,7 @@ app.use(helmet({
 }))
 app.use(cors())
 
-// Custom middlewares
-//app.use(notFound)
-app.use(errHandler)
+// Request Logger should run before routes
 app.use(reqLogger)
 
 // Serve static frontend files from the public directory
@@ -46,5 +44,9 @@ app.use(passport.initialize())
 app.use('/health', healthRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/reports', reportRoutes)
+
+// Custom error handling middlewares must be placed AFTER all routes
+app.use(notFound)
+app.use(errHandler)
 
 export default app;

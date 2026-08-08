@@ -102,7 +102,7 @@ Deterministic, non-generative modules usable standalone or invoked mid-chat by P
 
 ## Tech stack
 
-- **Backend**: Express, PostgreSQL with Drizzle ORM, BullMQ (Redis-backed queue) for async pipeline stages, Zod for validation
+- **Backend**: Express, PostgreSQL with Drizzle ORM, nodejs in queue system for async pipeline stages, Zod for validation
 - **AI**: Gemini 2.5 Flash — vision calls for transcription, text calls for structuring and chat-guided gap resolution
 - **Auth**: Google OAuth
 - **PDF export**: Puppeteer-core + `@sparticuz/chromium` (avoids bundling a full Chromium binary), rendering Bench 4's own HTML templates rather than model-generated markup

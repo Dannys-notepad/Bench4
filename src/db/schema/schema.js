@@ -4,7 +4,7 @@ import { sql } from 'drizzle-orm'
 const userPlanEnum = pgEnum('user_plan', ['free', 'pro'])
 const billingIntervalEnum = pgEnum('user_billing_interval', ['weekly', 'monthly', 'yearly'])
 const reportTypeEnum = pgEnum('report_type', ['guided', 'digitized'])
-const reportStatusEnum = pgEnum('report_status', ['draft', 'needs_review', 'structuring', 'completed', 'failed'])
+const reportStatusEnum = pgEnum('report_status', ['draft', 'transcribing', 'needs_review', 'structuring', 'completed', 'failed'])
 const tokenStatusEnum = pgEnum('token_status', ['active', 'blacklisted'])
 
 export const users = pgTable('users', {
@@ -17,7 +17,7 @@ export const users = pgTable('users', {
     plan: userPlanEnum('plan').notNull().default('free'),
     billingInterval: billingIntervalEnum('billing_interval'),
 
-    digitizedCounToday: smallint('digitized_count_today').notNull().default(0),
+    digitizedCountToday: smallint('digitized_count_today').notNull().default(0),
     guidedCountToday: smallint('guided_count_today').notNull().default(0),
     usageResetAt: date('usage_reset_at').notNull().default(sql`CURRENT_DATE`),
 
@@ -49,6 +49,8 @@ export const reports = pgTable('reports', {
     aiAssisted: boolean('ai_assisted').notNull().default(false),
     version: integer('version').notNull().default(1),
     approvedAt: timestamp('approved_at'),
+    pdfUrl: text('pdf_url'),
+    pdfPublicId: text('pdf_public_id'),
 
     created_at: timestamp('created_at').defaultNow().notNull(),
     updated_at: timestamp('updated_at').defaultNow().notNull(),

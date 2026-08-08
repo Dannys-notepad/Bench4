@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import reportRepository from '../repositories/report.repo.js'
-import userRepository from '../repositories/user.repo.js'
-import db from '../db/client.js'
-import { reports, users } from '../db/schema/schema.js'
+import reportRepository from '#repositories/report.repo.js'
+import userRepository from '#repositories/user.repo.js'
+import db from '#db/client.js'
+import { reports, users } from '#db/schema/schema.js'
 
 let ID = 0;
 let counter = 0;
@@ -12,8 +12,10 @@ const buildData = (overrides = {}) => {
         userId: ID,
         title: `Test report ${counter}`,
         template: 'test template',
+        reportType: 'digitized',
         status: 'draft',
-        rawPhotoUrl: `test-url-${counter}`,
+        rawPhotoUrls: [`test-url-${counter}`],
+        rawPhotoPublicIds: [`test-id-${counter}`],
         transcript: `test transcript ${counter}`,
         structuredData: { key: 'value' },
         flaggedFields: { key: 'value' },
@@ -59,8 +61,10 @@ describe('reportRepository', () => {
             userId: data.userId,
             title: `Test report 1`,
             template: 'test template',
+            reportType: 'digitized',
             status: 'draft',
-            rawPhotoUrl: `test-url`,
+            rawPhotoUrls: [`test-url`],
+            rawPhotoPublicIds: [`test-id`],
             transcript: `test transcript`,
             structuredData: { key: 'value' },
             flaggedFields: { key: 'value' },
@@ -72,8 +76,10 @@ describe('reportRepository', () => {
             userId: data.userId,
             title: `Test report 2`,
             template: 'test template',
+            reportType: 'digitized',
             status: 'draft',
-            rawPhotoUrl: `test-url`,
+            rawPhotoUrls: [`test-url`],
+            rawPhotoPublicIds: [`test-id`],
             transcript: `test transcript`,
             structuredData: { key: 'value' },
             flaggedFields: { key: 'value' },

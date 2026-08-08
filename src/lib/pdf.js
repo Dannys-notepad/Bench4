@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
-import AppError from './AppError.js';
+import AppError from '#lib/AppError.js';
 
 /**
  * Generates a PDF buffer from a finalized report

@@ -1,19 +1,24 @@
-// Builds a standard JSON response payload and sends it with the provided status.
-const sendResponse = (res, { success, message, status, data = null, errors = null }) => {
-  const payload = { success, message };
+class ApiResponse {
+  static send(res, { success, message, status, data = null, errors = null, meta = null }) {
+    const payload = { success, message };
 
-  if (data !== null) payload.data = data;
-  if (errors !== null) payload.errors = errors;
+    if (data !== null) payload.data = data;
+    if (errors !== null) payload.errors = errors;
+    if (meta !== null) payload.meta = meta;
 
-  return res.status(status).json(payload);
-};
+    return res.status(status).json(payload);
+  }
 
-// SUCCESS RESPONSE
-// Sends a successful JSON response with optional data.
-export const success = (res, message, data = null, status = 200) =>
-  sendResponse(res, { success: true, message, status, data });
+  static success(res, message, data = null, status = 200, meta = null) {
+    return this.send(res, { success: true, message, status, data, meta });
+  }
 
-// ERROR RESPONSE
-// Sends a failure JSON response with optional error details.
-export const error = (res, message, errors = null, status = 400) =>
-  sendResponse(res, { success: false, message, status, errors });
+  static error(res, message, errors = null, status = 400) {
+    return this.send(res, { success: false, message, status, errors });
+  }
+}
+
+export const success = ApiResponse.success.bind(ApiResponse);
+export const error = ApiResponse.error.bind(ApiResponse);
+
+export default ApiResponse;

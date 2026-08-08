@@ -1,5 +1,5 @@
-import db from '../db/client.js'
-import { tokens } from '../db/schema/schema.js'
+import db from '#db/client.js'
+import { tokens } from '#db/schema/schema.js'
 import { eq } from 'drizzle-orm'
 
 const tokenRepository = {

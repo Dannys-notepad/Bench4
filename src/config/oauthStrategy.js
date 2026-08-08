@@ -1,7 +1,7 @@
 import passport from 'passport';
 import  { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import userRepository from '../repositories/user.repo.js';
-import env from './env.js'
+import userRepository from '#repositories/user.repo.js';
+import env from '#config/env.js'
 
 passport.use(new GoogleStrategy(
     {
@@ -12,8 +12,7 @@ passport.use(new GoogleStrategy(
     async (accessToken, refreshToken, profile, done) => {
         try {
             
-            let user = await userRepository.findByGoogleId(profile.id)
-            if (!user) user = await userRepository.createFromGoogle(profile);
+            let user = await userRepository.findOrCreateFromGoogle(profile)
             
             done(null, user)
         } catch(error) {

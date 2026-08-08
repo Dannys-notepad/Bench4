@@ -1,4 +1,4 @@
-import db from './client.js';
+import db from '#db/client.js';
 import { sql } from 'drizzle-orm';
 
 async function testConnection() {

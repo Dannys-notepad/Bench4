@@ -1,28 +1,12 @@
-import enforceDailyLimit from './enforceDailyLimit.js'
-import { error } from '../../../lib/response.js'
+import enforceDailyLimit from '#modules/reports/limits/enforceDailyLimit.js'
+import asyncHandler from '#lib/asyncHandler.js'
 
-export const checkDigitizedLimit = async (req, res, next) => {
-    try {
-        const enforce = await enforceDailyLimit(req.user.id, 'digitized')
+export const checkDigitizedLimit = asyncHandler(async (req, res, next) => {
+    await enforceDailyLimit(req.user.id, 'digitized')
+    next()
+})
 
-        if (enforce?.status) return error(res, enforce.message, {}, enforce.status)
-        next()
-
-    } catch (e) {
-        console.error('Error enforcing user digitized limit', e)
-        return error(res, 'Server Error', {}, 500)
-    }
-}
-
-export const checkGuidedLimit = async (req, res, next) => {
-    try {
-        const enforce = enforceDailyLimit(req.user.id, 'guided')
-
-        if (enforce?.status) return error(res, enforce.message, {}, enforce.status)
-        next()
-
-    } catch (e) {
-        console.error('Error enforcing user guided limit', e)
-        return error(res, 'Server Error', {}, 500)
-    }
-}
+export const checkGuidedLimit = asyncHandler(async (req, res, next) => {
+    await enforceDailyLimit(req.user.id, 'guided')
+    next()
+})

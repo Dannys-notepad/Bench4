@@ -9,7 +9,7 @@ export const createReportSchema = z.object({
     reportType: z.enum(['digitized', 'guided'], {
         errorMap: () => ({ message: 'Type must be either digitized or guided' })
     }),
-    editInstruction: z.string().max(50, 'Edit instruction should not be more than 50 words').nullable(),
+    editInstructions: z.string().max(500, 'Edit instructions should not exceed 500 characters').nullable(),
     version: z.number().int().min(1).default(1),
 })
 

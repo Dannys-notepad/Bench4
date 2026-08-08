@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import userRepository from '../repositories/user.repo.js'
-import db from '../db/client.js'
-import { users } from '../db/schema/schema.js'
+import userRepository from '#repositories/user.repo.js'
+import db from '#db/client.js'
+import { users } from '#db/schema/schema.js'
 
 describe('userRepository', () => {
     beforeEach( async () => {

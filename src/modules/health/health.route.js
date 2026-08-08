@@ -1,20 +1,16 @@
-import express from 'express';
-import { success, error } from '../../lib/response.js'
+import { Router } from 'express';
+import { success } from '#lib/response.js'
+import asyncHandler from '#lib/asyncHandler.js'
+import AppError from '#lib/AppError.js'
 
-// db imports
-import db from '../../db/client.js';
+import db from '#db/client.js';
 import { sql } from 'drizzle-orm';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/db', async (req, res) => {
-    try{
-        await db.execute(sql`SELECT 1`)
-        return success(res, 'DB connected sucessfully', { status: 'ok', db: 'connected' }, 200)
-    } catch (e) {
-        console.error('DB connection error', e)
-        return error(res, 'Server Error', {}, 500)
-    }
-})
+router.get('/db', asyncHandler(async (req, res) => {
+    await db.execute(sql`SELECT 1`)
+    return success(res, 'DB connected successfully', { status: 'ok', db: 'connected' })
+}))
 
 export default router;

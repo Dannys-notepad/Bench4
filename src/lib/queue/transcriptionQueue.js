@@ -1,17 +1,15 @@
-import { processTranscriptionJob } from '../../workers/transcriptionWorker.js'
+import { processTranscriptionJob } from '#workers/transcriptionWorker.js'
 
 /**
  * Enqueue a new transcription job natively.
- * This runs the processTranscriptionJob in the background without awaiting it,
- * simulating a queue so the main request thread isn't blocked.
- * 
+ * Runs processTranscriptionJob in the background without blocking the request.
+ *
  * @param {string} reportId - The database ID of the report
  * @param {string[]} rawPhotoUrls - An array of the URLs of the uploaded images
+ * @param {string|null} editInstructions - Optional user edit instructions
  */
-export const enqueueTranscriptionJob = (reportId, rawPhotoUrls) => {
-    // We call the async function without awaiting it.
-    // This fires off the promise in the background.
-    processTranscriptionJob(reportId, rawPhotoUrls).catch(err => {
+export const enqueueTranscriptionJob = (reportId, rawPhotoUrls, editInstructions) => {
+    processTranscriptionJob(reportId, rawPhotoUrls, editInstructions).catch(err => {
         console.error(`Unhandled error in background job for report ${reportId}:`, err)
     })
     

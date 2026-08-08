@@ -1,6 +1,6 @@
-import db from '../db/client.js'
-import { reports } from '../db/schema/schema.js'
-import { eq } from 'drizzle-orm'
+import db from '#db/client.js'
+import { reports } from '#db/schema/schema.js'
+import { eq, sql } from 'drizzle-orm'
 
 const reportRepository = {
     async findAll() {
@@ -15,10 +15,9 @@ const reportRepository = {
     },
 
     async findAllByUser(userId) {
-        const report = await db.select()
-        .from(reports).where(eq(reports.userId, userId))
-
-        return report ?? null
+        return db.select()
+        .from(reports)
+        .where(eq(reports.userId, userId))
     },
 
     async create(data) {
@@ -35,6 +34,7 @@ const reportRepository = {
             rawPhotoPublicIds: data.rawPhotoPublicIds,
             
             structuredData: data.structuredData,
+            flaggedFields: data.flaggedFields,
             aiAssisted: data.aiAssisted,
             version: data.version,
         }).returning()
@@ -51,6 +51,18 @@ const reportRepository = {
         return report ?? null
     },
 
+    async incrementVersion(id) {
+        const [report] = await db.update(reports)
+        .set({
+            version: sql`${reports.version} + 1`,
+            updated_at: new Date()
+        })
+        .where(eq(reports.id, id))
+        .returning()
+
+        return report ?? null
+    },
+
     async delete(id) { 
         const [report] = await db.delete(reports)
         .where(eq(reports.id, id)).returning()
@@ -59,4 +71,4 @@ const reportRepository = {
     },
 }
 
-export default reportRepository;
+export default reportRepository

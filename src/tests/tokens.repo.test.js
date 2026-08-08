@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import tokenRepository from '../repositories/token.repo.js'
-import userRepository from '../repositories/user.repo.js'
-import db from '../db/client.js'
-import { tokens, users } from '../db/schema/schema.js'
+import tokenRepository from '#repositories/token.repo.js'
+import userRepository from '#repositories/user.repo.js'
+import db from '#db/client.js'
+import { tokens, users } from '#db/schema/schema.js'
 
 let ID = 0;
 let counter = 0;
